@@ -1,0 +1,3 @@
+Start the Arduino IDE.
+Click Sketch  >Include Library > Add zip file and select the file.
+Restart the IDE.
