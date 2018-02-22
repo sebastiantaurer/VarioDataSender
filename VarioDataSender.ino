@@ -5,7 +5,7 @@
 #define rxPin 10
 #define txPin 11
 
-MS5611 baro;
+MS5611 sensor;
 int32_t pressure;
 float pressure_filtered = 0;
 boolean started = false;
@@ -15,19 +15,20 @@ String btData;
 
 void setup() {
   // put your setup code here, to run once:
-  // Start barometer
-  baro = MS5611();
-  baro.begin();
+  // Start sensormeter
+  sensor = MS5611();
+  sensor.begin();
 
   // Start Bluetooth
   btSerial.begin(9600);
 
-  pinMode(ledPin,OUTPUT);
+  pinMode(ledPin, OUTPUT);
   delay(10);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  digitalWrite(ledPin, 0);
   while(!started){
     if (btSerial.available()){
       btData = btSerial.readString();
@@ -35,13 +36,13 @@ void loop() {
         started = true;
       }
     }
-    btSerial.println("waiting");
-    digitalWrite(ledPin,0);
+    btSerial.print("#waiting");
     delay(1000);
   }
 
   digitalWrite(ledPin,1);
   while(started){
-    btSerial.println(baro.getPressure());
+    btSerial.print(String("#$baro:"+String(sensor.getPressure())+"$"));
+    btSerial.print(String("#$temp:"+String(sensor.getTemperature())+"$"));
   }
 }
